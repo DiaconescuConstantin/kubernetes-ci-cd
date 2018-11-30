@@ -9,16 +9,19 @@ node {
     tag = readFile('commit-id').replace("\n", "").replace("\r", "")
     appName = "hello-kenzan"
     registryHost = "127.0.0.1:30400/"
-    imageName = "${registryHost}${appName}:latest"
+    imageName = "${registryHost}${appName}:${tag}"
+    imageNameLatest = "${registryHost}${appName}:latest"
     env.BUILDIMG=imageName
 
     stage "Build"
     
         sh "docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
+        sh "docker build -t ${imageNameLatest} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
     
     stage "Push"
 
         sh "docker push ${imageName}"
+        sh "docker push ${imageNameLatest}"
 
     stage "Deploy"
 
